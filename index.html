@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sunrise Airways - Mots Cachés Aviation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="game-container">
+    <!-- En-tête du jeu -->
+    <header class="game-header">
+      <h1 class="game-title">SUNRISE AIRWAYS <span>MOTS CACHÉS</span></h1>
+      
+      <div class="controls-bar">
+        <!-- Sélecteur de Langue -->
+        <div class="lang-select-wrapper">
+          <label for="langSelect" class="level-label">Langue / Language / Idioma :</label>
+          <select id="langSelect" class="btn lang-select">
+            <option value="fr" selected>Français</option>
+            <option value="en">English</option>
+            <option value="es">Español</option>
+          </select>
+        </div>
+
+        <!-- Sélecteur de niveau (1 à 20) -->
+        <div class="level-select-wrapper">
+          <label for="levelSelect" class="level-label">Niveau :</label>
+          <select id="levelSelect" class="btn level-select"></select>
+        </div>
+
+        <!-- Boutons d'action -->
+        <button id="restartBtn" class="btn">Recommencer</button>
+        <button id="themeToggle" class="btn">Mode Sombre</button>
+      </div>
+    </header>
+
+    <!-- Zone de jeu principale -->
+    <main class="game-body">
+      <!-- Grille de mots cachés (12x12) -->
+      <div class="grid-wrapper">
+        <div id="wordGrid" class="word-grid"></div>
+      </div>
+
+      <!-- Panneau latéral : Statistiques et liste des mots -->
+      <aside class="word-panel">
+        <div class="stats-box">
+          <span>MOTS: <strong id="foundCount">0/8</strong></span>
+          <span>TEMPS: <strong id="timer">00:00</strong></span>
+        </div>
+
+        <div class="category-box">
+          <div class="category-title" id="categoryTitle">Niveau 1 : Personnel de Bord</div>
+          <ul id="wordList" class="word-list"></ul>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Instructions / Pied de page -->
+    <footer class="game-instructions">
+      <p><strong>Règle :</strong> Glissez ou sélectionnez la première et la dernière lettre d'un mot pour le valider. Découvrez les 20 niveaux thématiques dans la langue de votre choix !</p>
+    </footer>
+  </div>
+
+  <!-- Script du jeu multilingue -->
+  <script src="script.js"></script>
+</body>
+</html>
