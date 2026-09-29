@@ -1,6 +1,5 @@
 /* ==========================================================================
-   SUNRISE AIRWAYS - MOTS CACHÉS AVIATION (STYLE CSS MULTILINGUE & 20 NIVEAUX)
-   Thème Rétro / Vectoriel Moderne & Mode Sombre
+   SUNRISE AIRWAYS - MOTS CACHÉS AVIATION (STYLE CSS TACTILE & RESPONSIVE)
    ========================================================================== */
 
 /* --- RESET & VARIABLES GLOBALES --- */
@@ -40,6 +39,8 @@ body.dark-mode {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  /* Évite la sélection bleue/grisée intempestive au toucher sur iOS et Android */
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
@@ -50,7 +51,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding: 20px;
+  padding: 16px;
   transition: background-color var(--transition-speed), color var(--transition-speed);
 }
 
@@ -69,7 +70,7 @@ body {
   transition: background-color var(--transition-speed), border-color var(--transition-speed);
 }
 
-/* --- EN-TÊTE & BARRE DE CONTRÔLE --- */
+/* --- EN-TÊTE & BRANDING --- */
 .game-header {
   display: flex;
   justify-content: space-between;
@@ -80,18 +81,31 @@ body {
   padding-bottom: 16px;
 }
 
+.brand-box {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .game-title {
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .game-title span {
   color: var(--accent-color);
   font-family: var(--font-mono);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   display: inline-block;
-  margin-left: 6px;
+  margin-left: 4px;
+}
+
+.game-slogan {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-style: italic;
 }
 
 .controls-bar {
@@ -151,7 +165,7 @@ select.level-select option {
   background-color: transparent;
   color: var(--text-primary);
   border: 2px solid var(--border-color);
-  padding: 8px 16px;
+  padding: 8px 14px;
   font-family: var(--font-mono);
   font-weight: bold;
   font-size: 0.85rem;
@@ -160,6 +174,7 @@ select.level-select option {
   outline: none;
   transition: all 0.2s ease;
   user-select: none;
+  -webkit-user-select: none;
 }
 
 .btn:hover {
@@ -191,17 +206,15 @@ select.level-select option {
   align-items: start;
 }
 
-/* --- GRILLE DE MOTS CACHÉS --- */
+/* --- GRILLE DE MOTS CACHÉS (OPTIMISÉE POUR TOUCH/MOBILE) --- */
 .grid-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: var(--grid-bg);
-  padding: 12px;
+  padding: 10px;
   border: 2px solid var(--border-color);
   border-radius: 8px;
-  user-select: none;
-  touch-action: none;
   transition: background-color var(--transition-speed), border-color var(--transition-speed);
 }
 
@@ -212,6 +225,10 @@ select.level-select option {
   width: 100%;
   max-width: 480px;
   aspect-ratio: 1 / 1;
+  /* CRUCIAL POUR MOBILE : Empêche le défilement de la page pendant le glissement */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .cell {
@@ -225,6 +242,8 @@ select.level-select option {
   font-weight: bold;
   font-size: 1.05rem;
   cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
   transition: background-color 0.15s ease, transform 0.1s ease;
 }
 
@@ -315,11 +334,15 @@ select.level-select option {
   line-height: 1.4;
 }
 
-/* --- ADAPTATION MOBILE (RESPONSIVE) --- */
+/* --- ADAPTATION MOBILE / SMARTPHONE --- */
 @media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
   .game-container {
-    padding: 16px;
-    gap: 16px;
+    padding: 14px;
+    gap: 14px;
   }
 
   .game-header {
@@ -356,6 +379,6 @@ select.level-select option {
   }
 
   .cell {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
   }
 }
