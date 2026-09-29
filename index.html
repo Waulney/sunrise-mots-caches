@@ -2,7 +2,8 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Désactive le zoom involontaire lors du glissement sur mobile -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Sunrise Airways - Mots Cachés Aviation</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -11,12 +12,15 @@
   <div class="game-container">
     <!-- En-tête du jeu -->
     <header class="game-header">
-      <h1 class="game-title">SUNRISE AIRWAYS <span>MOTS CACHÉS</span></h1>
+      <div class="brand-box">
+        <h1 class="game-title">SUNRISE AIRWAYS <span>MOTS CACHÉS</span></h1>
+        <p class="game-slogan" id="gameSlogan">Apprendre en jouant • Learn through play • Aprender jugando</p>
+      </div>
       
       <div class="controls-bar">
         <!-- Sélecteur de Langue -->
         <div class="lang-select-wrapper">
-          <label for="langSelect" class="level-label">Langue / Language / Idioma :</label>
+          <label for="langSelect" class="level-label">Langue :</label>
           <select id="langSelect" class="btn lang-select">
             <option value="fr" selected>Français</option>
             <option value="en">English</option>
@@ -46,8 +50,8 @@
       <!-- Panneau latéral : Statistiques et liste des mots -->
       <aside class="word-panel">
         <div class="stats-box">
-          <span>MOTS: <strong id="foundCount">0/8</strong></span>
-          <span>TEMPS: <strong id="timer">00:00</strong></span>
+          <span>MOTS : <strong id="foundCount">0/8</strong></span>
+          <span>TEMPS : <strong id="timer">00:00</strong></span>
         </div>
 
         <div class="category-box">
@@ -59,11 +63,11 @@
 
     <!-- Instructions / Pied de page -->
     <footer class="game-instructions">
-      <p><strong>Règle :</strong> Glissez ou sélectionnez la première et la dernière lettre d'un mot pour le valider. Découvrez les 20 niveaux thématiques dans la langue de votre choix !</p>
+      <p><strong>Règle :</strong> Glissez votre doigt ou cliquez de la première à la dernière lettre d'un mot pour le valider. Découvrez les 20 niveaux thématiques dans la langue de votre choix !</p>
     </footer>
   </div>
 
-  <!-- Script du jeu multilingue -->
+  <!-- Script du jeu multilingue & tactile -->
   <script src="script.js"></script>
 </body>
 </html>
