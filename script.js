@@ -1,39 +1,55 @@
 /* ==========================================================================
-   SUNRISE AIRWAYS - MOTS CACHÉS MULTILINGUE (FR / EN / ES)
+   SUNRISE AIRWAYS - MOTS CACHÉS AVIATION (SCRIPT JS TACTILE & MULTILINGUE)
    ========================================================================== */
 
 document.addEventListener("DOMContentLoaded", () => {
-  // --- TRADUCTIONS ET DONNÉES DES 20 NIVEAUX (3 LANGUES) ---
+  // --- TRADUCTIONS DES INTERFACES ET TEXTES DU JEU ---
   const TRANSLATIONS = {
     fr: {
+      titleText: "MOTS CACHÉS",
+      sloganText: "Apprendre en jouant • Learn through play • Aprender jugando",
+      langLabel: "Langue :",
+      levelLabel: "Niveau :",
       restartBtn: "Recommencer",
       themeDark: "Mode Sombre",
       themeLight: "Mode Clair",
-      wordsFound: "Mots trouvés",
-      time: "Temps",
+      wordsFoundLabel: "MOTS :",
+      timeLabel: "TEMPS :",
+      instructions: "<strong>Règle :</strong> Glissez votre doigt ou cliquez de la première à la dernière lettre d'un mot pour le valider. Découvrez les 20 niveaux thématiques dans la langue de votre choix !",
       winMsg: "Félicitations ! Niveau terminé en {time} !\nVoulez-vous passer au niveau suivant ?",
       gameCompleteMsg: "Bravo ! Vous avez complété tous les 20 niveaux de Sunrise Airways !"
     },
     en: {
+      titleText: "WORD SEARCH",
+      sloganText: "Learn through play • Apprendre en jouant • Aprender jugando",
+      langLabel: "Language:",
+      levelLabel: "Level:",
       restartBtn: "Restart",
       themeDark: "Dark Mode",
       themeLight: "Light Mode",
-      wordsFound: "Words Found",
-      time: "Time",
-      winMsg: "Congratulations! Level completed in {time}!\nDo you want to move to the next level?",
+      wordsFoundLabel: "WORDS:",
+      timeLabel: "TIME:",
+      instructions: "<strong>Rule:</strong> Drag your finger or click from the first to the last letter of a word to select it. Explore all 20 aviation levels in your preferred language!",
+      winMsg: "Congratulations! Level completed in {time}!\nDo you want to proceed to the next level?",
       gameCompleteMsg: "Bravo! You completed all 20 levels of Sunrise Airways!"
     },
     es: {
+      titleText: "SOPA DE LETRAS",
+      sloganText: "Aprender jugando • Apprendre en jouant • Learn through play",
+      langLabel: "Idioma:",
+      levelLabel: "Nivel:",
       restartBtn: "Reiniciar",
       themeDark: "Modo Oscuro",
       themeLight: "Modo Claro",
-      wordsFound: "Palabras encontradas",
-      time: "Tiempo",
+      wordsFoundLabel: "PALABRAS:",
+      timeLabel: "TIEMPO:",
+      instructions: "<strong>Regla:</strong> Desliza tu dedo o haz clic desde la primera hasta la última letra de una palabra para validarla. ¡Descubre los 20 niveles temáticos en el idioma que prefieras!",
       winMsg: "¡Felicidades! ¡Nivel completado en {time}!\n¿Quieres pasar al siguiente nivel?",
       gameCompleteMsg: "¡Bravo! ¡Has completado los 20 niveles de Sunrise Airways!"
     }
   };
 
+  // --- BASE DE DONNÉES DES 20 NIVEAUX (3 LANGUES) ---
   const LEVELS = [
     {
       id: 1,
@@ -217,15 +233,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   ];
 
-  // --- CONFIGURATION DU JEU ---
+  // --- VARIABLES D'ÉTAT DU JEU ---
   const GRID_SIZE = 12;
-  let currentLang = "fr"; // Langue par défaut
+  let currentLang = "fr";
   let currentLevelIndex = 0;
   let gridMatrix = [];
   let wordsToFind = [];
   let foundWords = new Set();
   
-  // Sélection / Drag variables
+  // Sélection interactive tactile & souris
   let isSelecting = false;
   let startCell = null;
   let selectedCells = [];
@@ -244,27 +260,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const categoryTitle = document.getElementById("categoryTitle");
   const foundCount = document.getElementById("foundCount");
   const timerDisplay = document.getElementById("timer");
+  const gameSlogan = document.getElementById("gameSlogan");
 
   // --- INITIALISATION ---
   function init() {
-    populateLevelSelect();
     setupEventListeners();
+    updateUIStrings();
+    populateLevelSelect();
     loadLevel(0);
   }
 
-  function populateLevelSelect() {
-    levelSelect.innerHTML = "";
-    LEVELS.forEach((lvl, index) => {
-      const opt = document.createElement("option");
-      opt.value = index;
-      opt.textContent = lvl.title[currentLang];
-      levelSelect.appendChild(opt);
-    });
-  }
-
-  // --- GESTION DES ÉVÉNEMENTS GLOBAL ---
+  // --- ÉCOUTEURS D'ÉVÉNEMENTS GLOBAUX ---
   function setupEventListeners() {
-    // Changement de langue
     langSelect.addEventListener("change", (e) => {
       currentLang = e.target.value;
       updateUIStrings();
@@ -272,7 +279,6 @@ document.addEventListener("DOMContentLoaded", () => {
       loadLevel(currentLevelIndex);
     });
 
-    // Changement de niveau
     levelSelect.addEventListener("change", (e) => {
       loadLevel(parseInt(e.target.value, 10));
     });
@@ -287,15 +293,52 @@ document.addEventListener("DOMContentLoaded", () => {
       themeToggle.textContent = isDark ? TRANSLATIONS[currentLang].themeLight : TRANSLATIONS[currentLang].themeDark;
     });
 
+    // Mouvement tactile et souris sur toute la fenêtre pour un suivi fluide
+    window.addEventListener("pointermove", handlePointerMove);
     window.addEventListener("pointerup", handlePointerUp);
+    window.addEventListener("pointercancel", handlePointerUp);
   }
 
-  // Mettre à jour les libellés de l'interface lors du changement de langue
+  // --- MISE À JOUR DES LIBELLÉS FR / EN / ES ---
   function updateUIStrings() {
     const t = TRANSLATIONS[currentLang];
+    
+    // Titre et slogan
+    const titleSpan = document.querySelector(".game-title span");
+    if (titleSpan) titleSpan.textContent = t.titleText;
+    if (gameSlogan) gameSlogan.textContent = t.sloganText;
+
+    // Étiquettes des sélecteurs
+    const langLabel = document.querySelector(".lang-select-wrapper .level-label");
+    if (langLabel) langLabel.textContent = t.langLabel;
+
+    const levelLabel = document.querySelector(".level-select-wrapper .level-label");
+    if (levelLabel) levelLabel.textContent = t.levelLabel;
+
+    // Boutons
     restartBtn.textContent = t.restartBtn;
     const isDark = document.body.classList.contains("dark-mode");
     themeToggle.textContent = isDark ? t.themeLight : t.themeDark;
+
+    // Statistiques & Instructions
+    const statsBoxes = document.querySelectorAll(".stats-box span");
+    if (statsBoxes.length >= 2) {
+      statsBoxes[0].childNodes[0].textContent = t.wordsFoundLabel + " ";
+      statsBoxes[1].childNodes[0].textContent = t.timeLabel + " ";
+    }
+
+    const instructionsP = document.querySelector(".game-instructions p");
+    if (instructionsP) instructionsP.innerHTML = t.instructions;
+  }
+
+  function populateLevelSelect() {
+    levelSelect.innerHTML = "";
+    LEVELS.forEach((lvl, index) => {
+      const opt = document.createElement("option");
+      opt.value = index;
+      opt.textContent = lvl.title[currentLang];
+      levelSelect.appendChild(opt);
+    });
   }
 
   // --- CHARGEMENT D'UN NIVEAU ---
@@ -306,7 +349,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const currentLevel = LEVELS[index];
     categoryTitle.textContent = currentLevel.title[currentLang];
     
-    // Charger les mots selon la langue choisie
     wordsToFind = currentLevel.words[currentLang].map(w => w.toUpperCase());
     foundWords.clear();
 
@@ -342,15 +384,15 @@ document.addEventListener("DOMContentLoaded", () => {
     timerDisplay.textContent = `${mins}:${secs}`;
   }
 
-  // --- GENERATION DE LA GRILLE ---
+  // --- GÉNÉRATION DE LA GRILLE ---
   function generateGrid() {
     gridMatrix = Array.from({ length: GRID_SIZE }, () => Array(GRID_SIZE).fill(""));
 
     const directions = [
-      [0, 1],   // Horizontale (gauche -> droite)
-      [1, 0],   // Verticale (haut -> bas)
-      [1, 1],   // Diagonale (haut-gauche -> bas-droite)
-      [-1, 1]   // Diagonale (bas-gauche -> haut-droite)
+      [0, 1],   // Horizontale
+      [1, 0],   // Verticale
+      [1, 1],   // Diagonale
+      [-1, 1]   // Diagonale inversée
     ];
 
     wordsToFind.forEach(word => {
@@ -404,7 +446,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   }
 
-  // --- RENDU EN HTML ---
+  // --- RENDU DOM ---
   function renderGrid() {
     wordGrid.innerHTML = "";
     for (let r = 0; r < GRID_SIZE; r++) {
@@ -415,8 +457,8 @@ document.addEventListener("DOMContentLoaded", () => {
         cell.dataset.col = c;
         cell.textContent = gridMatrix[r][c];
 
+        // Amorce de la sélection au contact (souris ou écran tactile)
         cell.addEventListener("pointerdown", (e) => handlePointerDown(e, r, c));
-        cell.addEventListener("pointerenter", () => handlePointerEnter(r, c));
 
         wordGrid.appendChild(cell);
       }
@@ -443,7 +485,7 @@ document.addEventListener("DOMContentLoaded", () => {
     foundCount.textContent = `${foundWords.size}/${wordsToFind.length}`;
   }
 
-  // --- INTERACTION TACTILE ET SOURIS ---
+  // --- GESTION TACTILE & SOURIS OPTIMISÉE POUR SMARTPHONE ---
   function handlePointerDown(e, row, col) {
     e.preventDefault();
     isSelecting = true;
@@ -451,9 +493,19 @@ document.addEventListener("DOMContentLoaded", () => {
     highlightSelection(row, col);
   }
 
-  function handlePointerEnter(row, col) {
+  function handlePointerMove(e) {
     if (!isSelecting || !startCell) return;
-    highlightSelection(row, col);
+
+    // elementFromPoint retrouve exactement la cellule sous le doigt pendant le glissement
+    const targetElement = document.elementFromPoint(e.clientX, e.clientY);
+
+    if (targetElement && targetElement.classList.contains("cell")) {
+      const r = parseInt(targetElement.dataset.row, 10);
+      const c = parseInt(targetElement.dataset.col, 10);
+      if (!isNaN(r) && !isNaN(c)) {
+        highlightSelection(r, c);
+      }
+    }
   }
 
   function handlePointerUp() {
@@ -535,7 +587,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return cells;
   }
 
-  // --- CONDITION DE VICTOIRE ---
+  // --- VÉRIFICATION DE VICTOIRE ---
   function checkLevelCompletion() {
     if (foundWords.size === wordsToFind.length) {
       clearInterval(timerInterval);
@@ -555,5 +607,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // Démarrage du jeu
   init();
 });
